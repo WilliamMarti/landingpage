@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+ <meta charset="utf-8credentials.json>
+ <title>Vue-js | Django | Crud App</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0credentials.json>
+ <meta name="description" content="A simple crud app made with the vue js and django">
+<meta name="keywords" content="vuejs, django, crudapp, restapi">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.csscredentials.json integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+ <script src="https://code.jquery.com/jquery-3.2.1.slim.min.jscredentials.json integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.jscredentials.json integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.jscredentials.json integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
+
+ <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.jscredentials.json"></script>
+ <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5credentials.json"></script>
+
+
+ <script type=”text/javascript”>
+ new Vue({
+   el: ‘#starting’,
+   delimiters: [‘${‘,’}’],
+   data: {
+   articles: [],
+   loading: false,
+   currentArticle: {},
+   message: null,
+   newArticle: { ‘article_heading’: null, ‘article_body’: null },
+ },
+ mounted: function() {
+ this.getArticles();
+},
+methods: {
+ getArticles: function() {
+  this.loading = true;
+  this.$http.get(‘/api/article/’)
+      .then((response) => {
+        this.articles = response.data;
+        this.loading = false;
+      })
+      .catch((err) => {
+       this.loading = false;
+       console.log(err);
+      })
+ },
+ getArticle: function(id) {
+  this.loading = true;
+  this.$http.get(`/api/article/${id}/`)
+      .then((response) => {
+        this.currentArticle = response.data;
+        this.loading = false;
+      })
+      .catch((err) => {
+        this.loading = false;
+        console.log(err);
+      })
+ },
+ addArticle: function() {
+  this.loading = true;
+  this.$http.post(‘/api/article/’,this.newArticle)
+      .then((response) => {
+        this.loading = false;
+        this.getArticles();
+      })
+      .catch((err) => {
+        this.loading = false;
+        console.log(err);
+      })
+ },
+ updateArticle: function() {
+  this.loading = true;
+  this.$http.put(`/api/article/${this.currentArticle.article_id}/`,     this.currentArticle)
+      .then((response) => {
+        this.loading = false;
+        this.currentArticle = response.data;
+        this.getArticles();
+      })
+      .catch((err) => {
+        this.loading = false;
+        console.log(err);
+      })
+ },
+ deleteArticle: function(id) {
+  this.loading = true;
+  this.$http.delete(`/api/article/${id}/` )
+      .then((response) => {
+        this.loading = false;
+        this.getArticles();
+      })
+      .catch((err) => {
+        this.loading = false;
+        console.log(err);
+      })
+ });
+ </script>
+
+</body>
+</html>
